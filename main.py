@@ -19,12 +19,21 @@ def toString(c):
     return arr.decode('utf-8')
 
 def count(m):
+    decodedMessage = toString(m)
     count = {}
-    for i in m:
+    for i in decodedMessage:
         if (i not in count):
             count[i] = 1
         else:
             count[i] += 1
+    
+    save = ''
+    for i in count:
+        save += f"{ord(i)},{count[i]}\n"
+
+    file = open("./count.csv", "w")
+    file.write(save)
+    file.close()
     return count
 
 def xor(c, s):
@@ -33,32 +42,18 @@ def xor(c, s):
         arr.append(chr(i ^ s))
     return ''.join(arr)
 
+def brute_force(c):
+    file = open("./brute-force-attempt.txt", "w")
+    for i in range(128):
+        a = ""
+        a += (f"Attempt {i}:\n")
+        a += (decrypt(c, chr(i)))
+        a += ("\n")
+        file.write(a)
+    file.close()
+
 if __name__ == '__main__':
     cipher = b"OhVTChwGUxEBFhIYUwcbGgBTEBoDGxYBBxYLB19TGgdTHhYSHQBTBxsSB1MKHAZTEgEWUxIRHxZTBxxTEQEWEhhTAAYRAAcaBwYHGhwdUxAaAxsWAQBTBgAaHRRTFQEWAgYWHRAKUxIdEh8KABoAXVMkFh8fUzccHRZS"
-    testMessage = "Hello"
-    testKey = 'c'
-
-    # a = encrypt(testMessage, testKey)
-    # print(a)
-    # a = decrypt(a, testKey)
-    # print(a)
-    # b = toString(cipher)
-    # a = count(b)
-    # save = ''
-    # for i in a:
-    #     save += f"{ord(i)},{a[i]}\n"
-    
-    # file = open("./count.csv", "w")
-    # file.write(save)
-    # file.close()
-
-    # file = open("./brute-force-attempt.txt", "w")
-    # for i in range(128):
-    #     a = ""
-    #     a += (f"Attempt {i}:\n")
-    #     a += (decrypt(cipher, chr(i)))
-    #     a += ("\n")
-    #     file.write(a)
-    # file.close()
-
+    count(cipher)
+    brute_force(cipher)
     print(decrypt(cipher, 's'))
